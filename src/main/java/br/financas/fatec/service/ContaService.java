@@ -9,7 +9,7 @@ import br.financas.fatec.model.Conta;
 
 @Service
 public class ContaService {
-	private static List<Conta> contas = new ArrayList<>();
+	private static List<Conta> contas = new ArrayList<Conta>();
 
 	public ContaService() {
 	}
@@ -56,4 +56,23 @@ public class ContaService {
 		}
 		return false;
 	}
+	
+	public boolean depositar(Long id, Float valor) {
+		Conta _conta = find(id);
+		if (_conta != null) {
+			_conta.setSaldo(_conta.getSaldo() + valor);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean sacar(Long id, Float valor) {
+		Conta _conta = find(id);
+		if (_conta != null && _conta.getSaldo() >= valor) {
+			_conta.setSaldo(_conta.getSaldo() - valor);
+			return true;
+		}
+		return false;		
+	}
+	
 }

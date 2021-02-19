@@ -43,6 +43,24 @@ public class ContaController {
 		return ResponseEntity.ok(conta);
 	}
 
+	@PostMapping("/depositar/{id}/{valor}")
+	public ResponseEntity<?> depositar(@PathVariable("id") Long id,
+			                           @PathVariable("valor") Float valor) {
+		if (service.depositar(id, valor)) {
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	}
+
+	@PostMapping("/sacar/{id}/{valor}")
+	public ResponseEntity<?> sacar(@PathVariable("id") Long id,
+			                       @PathVariable("valor") Float valor) {
+		if (service.sacar(id, valor)) {
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	}
+
 	@PutMapping
 	public ResponseEntity<?> put(@RequestBody Conta conta) {
 		if (service.update(conta)) {
