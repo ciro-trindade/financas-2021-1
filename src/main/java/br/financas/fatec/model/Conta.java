@@ -2,14 +2,29 @@ package br.financas.fatec.model;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="tb_conta")
 public class Conta implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private static Long nextId = 1L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "pk_id")
 	private Long id;
+	@Column(name = "nr_agencia")
 	private Integer agencia;
+	@Column(name = "nm_numero", length = 10)
 	private String numero;
+	@Column(name = "nm_titular", length = 100)
 	private String titular;
+	@Column(name = "vl_saldo")
 	private Float saldo;
 	
 	public Conta() {
@@ -19,10 +34,6 @@ public class Conta implements Serializable {
 		this.id = id;
 	}
 	
-	public Long generateId() {
-		return nextId++;
-	}
-
 	public Long getId() {
 		return id;
 	}

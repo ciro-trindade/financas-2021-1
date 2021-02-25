@@ -1,78 +1,54 @@
 package br.financas.fatec.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.financas.fatec.model.Conta;
+import br.financas.fatec.repositories.ContaRepository;
 
 @Service
-public class ContaService {
-	private static List<Conta> contas = new ArrayList<Conta>();
+public class ContaService implements ServiceInterface<Conta>{
 
-	public ContaService() {
+	@Autowired
+	private ContaRepository repository;
+	
+	@Override
+	public Conta create(Conta obj) {		
+		repository.save(obj);
+		return obj;
 	}
 
-	public void create(Conta conta) {
-		conta.setId(conta.generateId());
-		contas.add(conta);
+	@Override
+	public Conta findById(Long id) {
+		Optional<Conta> _conta = repository.findById(id);
+		return _conta.orElse(null);
 	}
 
-	public List<Conta> findAll() {
-		return contas;
+	@Override
+	public List<Conta> findAll() {		
+		return repository.findAll();
 	}
 
-	public Conta find(Conta conta) {
-		for (Conta c : contas) {
-			if (c.equals(conta)) {
-				return c;
-			}
-		}
-		return null;
-	}
-
-	public Conta find(Long id) {
-		return find(new Conta(id));
-	}
-
-	public boolean update(Conta conta) {
-		Conta _conta = find(conta);
-		if (_conta != null) {
-			_conta.setAgencia(conta.getAgencia());
-			_conta.setNumero(conta.getNumero());
-			_conta.setTitular(conta.getTitular());
-			_conta.setSaldo(conta.getSaldo());
+	@Override
+	public boolean update(Conta obj) {
+		if (repository.existsById(obj.getId())) {
+			repository.save(obj);
 			return true;
 		}
 		return false;
 	}
 
+	@Override
 	public boolean delete(Long id) {
-		Conta _conta = find(id);
-		if (_conta != null) {
-			contas.remove(_conta);
+		if (repository.existsById(id)) {
+			repository.deleteById(id);
 			return true;
 		}
 		return false;
 	}
-	
-	public boolean depositar(Long id, Float valor) {
-		Conta _conta = find(id);
-		if (_conta != null) {
-			_conta.setSaldo(_conta.getSaldo() + valor);
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean sacar(Long id, Float valor) {
-		Conta _conta = find(id);
-		if (_conta != null && _conta.getSaldo() >= valor) {
-			_conta.setSaldo(_conta.getSaldo() - valor);
-			return true;
-		}
-		return false;		
-	}
+
 	
 }
