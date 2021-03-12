@@ -1,8 +1,16 @@
 package br.financas.fatec.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="tb_conta")
@@ -13,10 +21,15 @@ public class Conta extends AbstractEntity {
 	private Integer agencia;
 	@Column(name = "nm_numero", length = 10)
 	private String numero;
-	@Column(name = "nm_titular", length = 100)
-	private String titular;
 	@Column(name = "vl_saldo")
 	private Float saldo;
+
+	/*
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, 
+			   mappedBy = "conta")
+	//@JoinColumn(name = "conta_id")
+	private List<Movimentacao> movimentacoes;
+	*/
 	
 	public Conta() {
 	}
@@ -37,14 +50,6 @@ public class Conta extends AbstractEntity {
 		this.numero = numero;
 	}
 
-	public String getTitular() {
-		return titular;
-	}
-
-	public void setTitular(String titular) {
-		this.titular = titular;
-	}
-
 	public Float getSaldo() {
 		return saldo;
 	}
@@ -52,4 +57,16 @@ public class Conta extends AbstractEntity {
 	public void setSaldo(Float saldo) {
 		this.saldo = saldo;
 	}
+
+	/*
+	@JsonIgnore
+	public List<Movimentacao> getMovimentacoes() {
+		return movimentacoes;
+	}
+
+	@JsonProperty
+	public void setMovimentacoes(List<Movimentacao> movimentacoes) {
+		this.movimentacoes = movimentacoes;
+	}
+	*/
 }
