@@ -10,13 +10,13 @@ import br.financas.fatec.model.Conta;
 import br.financas.fatec.repositories.ContaRepository;
 
 @Service
-public class ContaService implements ServiceInterface<Conta>{
+public class ContaService implements ServiceInterface<Conta> {
 
 	@Autowired
 	private ContaRepository repository;
-	
+
 	@Override
-	public Conta create(Conta obj) {		
+	public Conta create(Conta obj) {
 		repository.save(obj);
 		return obj;
 	}
@@ -28,7 +28,7 @@ public class ContaService implements ServiceInterface<Conta>{
 	}
 
 	@Override
-	public List<Conta> findAll() {		
+	public List<Conta> findAll() {
 		return repository.findAll();
 	}
 
@@ -50,5 +50,18 @@ public class ContaService implements ServiceInterface<Conta>{
 		return false;
 	}
 
-	
+	public List<Conta> listarPorAgencia(Integer agencia) {
+		//return repository.listarPorAgencia(agencia);
+		return repository.findByAgencia(agencia);
+	}
+
+	public List<Conta> listarPorAgenciaESaldo(Integer agencia, Float from, Float to) {
+		//return repository.listarPorAgenciaESaldo(agencia, from, to);
+		return repository.findByAgenciaAndSaldoBetween(agencia, from, to);
+	}
+
+	public List<Conta> listarPorNomeCliente(String nome) {
+		return repository.listarPorNomeCliente(nome);
+	}
+
 }

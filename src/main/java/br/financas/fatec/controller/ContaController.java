@@ -19,7 +19,7 @@ import br.financas.fatec.service.ContaService;
 
 @RestController
 @RequestMapping("/contas")
-public class ContaController implements ControllerInterface<Conta>{
+public class ContaController implements ControllerInterface<Conta> {
 
 	@Autowired
 	private ContaService service;
@@ -47,25 +47,21 @@ public class ContaController implements ControllerInterface<Conta>{
 	}
 
 	/*
-	@PostMapping("/depositar/{id}/{valor}")
-	public ResponseEntity<?> depositar(@PathVariable("id") Long id,
-			                           @PathVariable("valor") Float valor) {
-		if (service.depositar(id, valor)) {
-			return ResponseEntity.ok().build();
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	}
+	 * @PostMapping("/depositar/{id}/{valor}") public ResponseEntity<?>
+	 * depositar(@PathVariable("id") Long id,
+	 * 
+	 * @PathVariable("valor") Float valor) { if (service.depositar(id, valor)) {
+	 * return ResponseEntity.ok().build(); } return
+	 * ResponseEntity.status(HttpStatus.NOT_FOUND).build(); }
+	 * 
+	 * @PostMapping("/sacar/{id}/{valor}") public ResponseEntity<?>
+	 * sacar(@PathVariable("id") Long id,
+	 * 
+	 * @PathVariable("valor") Float valor) { if (service.sacar(id, valor)) { return
+	 * ResponseEntity.ok().build(); } return
+	 * ResponseEntity.status(HttpStatus.NOT_FOUND).build(); }
+	 */
 
-	@PostMapping("/sacar/{id}/{valor}")
-	public ResponseEntity<?> sacar(@PathVariable("id") Long id,
-			                       @PathVariable("valor") Float valor) {
-		if (service.sacar(id, valor)) {
-			return ResponseEntity.ok().build();
-		}
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-	}
-	*/
-	
 	@Override
 	@PutMapping
 	public ResponseEntity<?> put(@RequestBody Conta conta) {
@@ -82,5 +78,21 @@ public class ContaController implements ControllerInterface<Conta>{
 			return ResponseEntity.ok().build();
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+	}
+
+	@GetMapping(value = "/agencia/{agencia}")
+	public ResponseEntity<List<Conta>> getByAgencia(@PathVariable("agencia") Integer agencia) {
+		return ResponseEntity.ok(service.listarPorAgencia(agencia));
+	}
+
+	@GetMapping(value = "/agencia/{agencia}/{from}/{to}")
+	public ResponseEntity<List<Conta>> getByAgenciaESaldo(@PathVariable("agencia") Integer agencia,
+			@PathVariable("from") Float from, @PathVariable("to") Float to) {
+		return ResponseEntity.ok(service.listarPorAgenciaESaldo(agencia, from, to));
+	}
+
+	@GetMapping(value = "/cliente/{nome}")
+	public ResponseEntity<List<Conta>> getByNomeCliente(@PathVariable("nome") String nome) {
+		return ResponseEntity.ok(service.listarPorNomeCliente(nome));
 	}
 }
