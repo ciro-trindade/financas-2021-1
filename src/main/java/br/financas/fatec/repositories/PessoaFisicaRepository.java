@@ -8,4 +8,5 @@ import br.financas.fatec.model.PessoaFisica;
 @Repository
 public interface PessoaFisicaRepository extends JpaRepository<PessoaFisica, Long> {
 
+
 }

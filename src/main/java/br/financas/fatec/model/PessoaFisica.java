@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 @Entity
 @Table(name = "tb_pessoa_fisica")
 //@DiscriminatorValue("Pessoa Física")
@@ -11,6 +13,7 @@ public class PessoaFisica extends Cliente {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="cd_cpf", length = 11)
+	@CPF
 	private String cpf;
 	@Column(name="nm_profissao", length = 30)
 	private String profissao;

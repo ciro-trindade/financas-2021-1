@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Past;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +29,8 @@ public class Movimentacao extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "vl_valor")
+	@Min(1)
+	@Max(100000)
 	private Float valor;
 	@Enumerated(EnumType.STRING)
 	@Column(name = "nm_tipo_movimentacao")
@@ -33,8 +38,9 @@ public class Movimentacao extends AbstractEntity {
 	@Column(name = "ds_descricao", length = 100)
 	private String descricao;
 	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
 	@Column(name = "dt_data")
+	@Past
 	private Calendar data;
 
 	@ManyToOne(fetch = FetchType.LAZY)

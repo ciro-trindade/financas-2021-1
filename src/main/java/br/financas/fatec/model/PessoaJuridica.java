@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.br.CNPJ;
+
 @Entity
 @Table(name = "tb_pessoa_juridica")
 //@DiscriminatorValue("Pessoa Jurírica")
@@ -11,6 +13,7 @@ public class PessoaJuridica extends Cliente {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="cd_cnpj", length=14)
+	@CNPJ
 	private String cnpj;
 	@Column(name="nm_ramo_atividade", length=20)
 	private String ramoAtividade;

@@ -2,6 +2,8 @@ package br.financas.fatec.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +43,7 @@ public class CategoriaController implements ControllerInterface<Categoria>{
 
 	@Override
 	@PostMapping
-	public ResponseEntity<Categoria> post(@RequestBody Categoria obj) {
+	public ResponseEntity<Categoria> post(@Valid @RequestBody Categoria obj) {
 		service.create(obj);
 		return ResponseEntity.ok(obj);
 	}
@@ -49,7 +51,7 @@ public class CategoriaController implements ControllerInterface<Categoria>{
 	
 	@Override
 	@PutMapping
-	public ResponseEntity<?> put(@RequestBody Categoria obj) {
+	public ResponseEntity<?> put(@Valid @RequestBody Categoria obj) {
 		if (service.update(obj)) {
 			return ResponseEntity.ok(obj);
 		}
