@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.financas.fatec.exception.AuthorizationException;
 import br.financas.fatec.model.PessoaJuridica;
 import br.financas.fatec.repositories.PessoaJuridicaRepository;
+import br.financas.fatec.security.JWTUtil;
 
 @Service
 public class PessoaJuridicaService implements ServiceInterface<PessoaJuridica>{
@@ -15,14 +18,24 @@ public class PessoaJuridicaService implements ServiceInterface<PessoaJuridica>{
 	@Autowired
 	private PessoaJuridicaRepository repository;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JWTUtil jwtUtil;
+
 	@Override
-	public PessoaJuridica create(PessoaJuridica obj) {		
+	public PessoaJuridica create(PessoaJuridica obj) {
+		obj.setSenha(passwordEncoder.encode(obj.getSenha()));
 		repository.save(obj);
 		return obj;
 	}
 
 	@Override
-	public PessoaJuridica findById(Long id) {
+	public PessoaJuridica findById(Long id) throws AuthorizationException {
+		if (!jwtUtil.authorized(id)) {
+			throw new AuthorizationException("Acesso negado!");
+		}
 		Optional<PessoaJuridica> _conta = repository.findById(id);
 		return _conta.orElse(null);
 	}

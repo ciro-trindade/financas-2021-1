@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.financas.fatec.exception.AuthorizationException;
 import br.financas.fatec.model.PessoaJuridica;
 import br.financas.fatec.service.PessoaJuridicaService;
 
 @RestController
 @RequestMapping("/pessoas_juridicas")
-public class PessoaJuridicaController implements ControllerInterface<PessoaJuridica>{
+public class PessoaJuridicaController implements ControllerInterface<PessoaJuridica> {
 
 	@Autowired
 	private PessoaJuridicaService service;
@@ -35,10 +36,14 @@ public class PessoaJuridicaController implements ControllerInterface<PessoaJurid
 	@Override
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
-		PessoaJuridica _obj = service.findById(id);
-		if (_obj != null)
-			return ResponseEntity.ok(_obj);
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		try {
+			PessoaJuridica _obj = service.findById(id);
+			if (_obj != null)
+				return ResponseEntity.ok(_obj);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		} catch (AuthorizationException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
 	}
 
 	@Override
@@ -48,7 +53,6 @@ public class PessoaJuridicaController implements ControllerInterface<PessoaJurid
 		return ResponseEntity.ok(obj);
 	}
 
-	
 	@Override
 	@PutMapping
 	public ResponseEntity<?> put(@Valid @RequestBody PessoaJuridica obj) {

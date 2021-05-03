@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import br.financas.fatec.exception.AuthorizationException;
 import br.financas.fatec.model.PessoaFisica;
 import br.financas.fatec.repositories.PessoaFisicaRepository;
+import br.financas.fatec.security.JWTUtil;
 
 @Service
 public class PessoaFisicaService implements ServiceInterface<PessoaFisica>{
@@ -15,14 +18,24 @@ public class PessoaFisicaService implements ServiceInterface<PessoaFisica>{
 	@Autowired
 	private PessoaFisicaRepository repository;
 	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
+	
+	@Autowired
+	private JWTUtil jwtUtil;
+	
 	@Override
-	public PessoaFisica create(PessoaFisica obj) {		
+	public PessoaFisica create(PessoaFisica obj) {
+		obj.setSenha(passwordEncoder.encode(obj.getSenha()));
 		repository.save(obj);
 		return obj;
 	}
 
 	@Override
-	public PessoaFisica findById(Long id) {
+	public PessoaFisica findById(Long id) throws AuthorizationException {
+		if (!jwtUtil.authorized(id)) {
+			throw new AuthorizationException("Acesso negado!");
+		}
 		Optional<PessoaFisica> _conta = repository.findById(id);
 		return _conta.orElse(null);
 	}
