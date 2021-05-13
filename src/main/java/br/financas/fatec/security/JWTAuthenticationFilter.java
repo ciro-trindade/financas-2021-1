@@ -1,6 +1,7 @@
 package br.financas.fatec.security;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -16,16 +17,23 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import br.financas.fatec.dto.CredenciaisDTO;
+import br.financas.fatec.model.Cliente;
+import br.financas.fatec.repositories.ClienteRepository;
+
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private AuthenticationManager authenticationManager;
 	private JWTUtil jwtUtil;
+	private ClienteRepository cliRepo;
+	
 
-	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+	public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, ClienteRepository cliRepo) {
 		this.authenticationManager = authenticationManager;
 		this.jwtUtil = jwtUtil;
+		this.cliRepo = cliRepo;
 	}
 
 	@Override
@@ -49,6 +57,15 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		String token = jwtUtil.generateToken(username);
 		response.addHeader("Authentication", "Bearer " + token);
 		response.addHeader("access-control-expose-headers", "Authorization");
+		Cliente cli = (Cliente) cliRepo.findByLogin(username);
+		cli.setSenha(null);
+		Gson gson = new Gson();
+		String cliStr = gson.toJson(cli);
+		PrintWriter out = response.getWriter();
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        out.print(cliStr);
+        out.flush(); 
 	}
 
 	@Override

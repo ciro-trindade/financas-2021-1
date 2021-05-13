@@ -16,6 +16,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import br.financas.fatec.repositories.ClienteRepository;
 import br.financas.fatec.security.JWTAuthenticationFilter;
 import br.financas.fatec.security.JWTAuthorizationFilter;
 import br.financas.fatec.security.JWTUtil;
@@ -29,6 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
+	
+	@Autowired
+	private ClienteRepository cliRepo;	
 
 	private static final String[] PUBLIC_MATCHERS = { "/categorias/**", "/pessoas_fisicas/**",
 			"/pessoas_juridicas/**" };
@@ -47,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST)
 			.permitAll().anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(),
-				jwtUtil));
+				jwtUtil, cliRepo));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil,
 				userDetailsService));
 	}
