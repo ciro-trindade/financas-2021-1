@@ -50,7 +50,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>		
+			<artifactId>gson</artifactId>
 		</dependency>
 
 		<dependency>
@@ -58,7 +58,27 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>LATEST</version>
+		</dependency>
+
 	</dependencies>
+
 
 	<build>
 		<plugins>

@@ -47,9 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests()
-			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()
-			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST)
-			.permitAll().anyRequest().authenticated();
+			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS).permitAll()				      
+			.antMatchers(HttpMethod.POST, PUBLIC_MATCHERS_POST).permitAll()
+			.antMatchers("/v3/api-docs/**", "/swagger-ui/**",
+					"/swagger-ui.html").permitAll()
+			.anyRequest().authenticated();
 		http.addFilter(new JWTAuthenticationFilter(authenticationManager(),
 				jwtUtil, cliRepo));
 		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil,
@@ -61,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService)
 		    .passwordEncoder(bCryptPasswordEncoder());
 	}
-
+	
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

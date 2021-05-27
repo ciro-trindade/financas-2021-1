@@ -19,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.financas.fatec.model.Categoria;
 import br.financas.fatec.service.CategoriaService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
 @RequestMapping("/categorias")
@@ -28,13 +32,31 @@ public class CategoriaController implements ControllerInterface<Categoria>{
 	private CategoriaService service;
 
 	@Override
-	@GetMapping
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200",
+			description = "Retorna a lista de categorias"),
+			@ApiResponse(responseCode = "403",
+			description = "Você não tem permissão para acessar este recurso"),
+			@ApiResponse(responseCode = "500",
+			description = "Foi gerada uma exceção"),
+			})
+	@Operation(summary = "Devolve a lista de todas as categorias")
+	@GetMapping(produces = "application/json")
 	public ResponseEntity<List<Categoria>> getAll() {
 		return ResponseEntity.ok(service.findAll());
 	}
 
 	@Override
-	@GetMapping(value = "/{id}")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200",
+			description = "Retorna a lista de categorias"),
+			@ApiResponse(responseCode = "403",
+			description = "Você não tem permissão para acessar este recurso"),
+			@ApiResponse(responseCode = "404",
+			description = "Não existe nenhuma categoria com esse id"),
+			})
+	@Operation(summary = "Devolve a a categoria dado seu id")
+	@GetMapping(value = "/{id}", produces = "application/json")
 	public ResponseEntity<?> get(@PathVariable("id") Long id) {
 		Categoria _obj = service.findById(id);
 		if (_obj != null)
@@ -43,7 +65,8 @@ public class CategoriaController implements ControllerInterface<Categoria>{
 	}
 
 	@Override
-	@PostMapping
+	@PostMapping(produces = "application/json")
+	@Operation(summary = "Grava uma nova categoria")
 	public ResponseEntity<Categoria> post(@Valid @RequestBody Categoria obj) {
 		service.create(obj);
 		return ResponseEntity.ok(obj);
@@ -51,7 +74,8 @@ public class CategoriaController implements ControllerInterface<Categoria>{
 
 	
 	@Override
-	@PutMapping
+	@PutMapping(produces = "application/json")
+	@Operation(summary = "Atualiza uma categoria")
 	public ResponseEntity<?> put(@Valid @RequestBody Categoria obj) {
 		if (service.update(obj)) {
 			return ResponseEntity.ok(obj);
@@ -62,6 +86,7 @@ public class CategoriaController implements ControllerInterface<Categoria>{
 	@Override
 	@DeleteMapping(value = "/{id}")
 	@PreAuthorize("hasAnyRole('ADMIN')")
+	@Operation(summary = "Exclui uma categoria")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		if (service.delete(id)) {
 			return ResponseEntity.ok().build();
